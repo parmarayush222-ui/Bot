@@ -102,7 +102,7 @@ suspend fun callOpenRouter(prompt: String, apiKey: String): String = withContext
         conn.doOutput = true
 
         val jsonBody = JSONObject().apply {
-            put("model", "deepseek/deepseek-r1:free")
+            put("model", "qwen/qwen-2.5-7b-instruct:free")
             val messages = JSONArray().apply {
                 put(JSONObject().apply {
                     put("role", "user")
