@@ -1,6 +1,7 @@
 package com.bot.app
 
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -9,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,6 +20,7 @@ import org.json.JSONObject
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +41,23 @@ fun AiCompanionScreen() {
     var textInput by remember { mutableStateOf("") }
     val chatLog = remember { mutableStateListOf("AI: Hello! I am your AI companion.") }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     val apiKey = "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"
+
+    var ttsEngine by remember { mutableStateOf<TextToSpeech?>(null) }
+
+    DisposableEffect(context) {
+        val tts = TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                ttsEngine?.language = Locale.US
+            }
+        }
+        ttsEngine = tts
+        onDispose {
+            tts.stop()
+            tts.shutdown()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -82,6 +101,7 @@ fun AiCompanionScreen() {
                         coroutineScope.launch {
                             val result = callOpenRouter(userQuery, apiKey)
                             chatLog[processingIndex] = "AI: $result"
+                            ttsEngine?.speak(result, TextToSpeech.QUEUE_FLUSH, null, null)
                         }
                     }
                 }
