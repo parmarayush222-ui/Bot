@@ -102,7 +102,7 @@ suspend fun callOpenRouter(prompt: String, apiKey: String): String = withContext
         conn.doOutput = true
 
         val jsonBody = JSONObject().apply {
-            put("model", "google/gemma-2-9b-it:free")
+            put("model", "deepseek/deepseek-r1:free")
             val messages = JSONArray().apply {
                 put(JSONObject().apply {
                     put("role", "user")
