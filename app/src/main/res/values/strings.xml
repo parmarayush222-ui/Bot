@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Bot</string>
+    <string name="accessibility_description">Lets Bot read visible on-screen text only when you enable Screen awareness. Password fields are excluded.</string>
+</resources>
